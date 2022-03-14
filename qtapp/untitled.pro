@@ -1,5 +1,5 @@
-QT -= core
-QT += serialport
+QT -= core gui
+QT += serialport printsupport widgets
 
 CONFIG += c++11 console debug
 CONFIG -= app_bundle
@@ -18,7 +18,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         ll_protocol.cpp \
-        main.cpp
+        main.cpp \
+        mainwindow.cpp \
+        qcustomplot.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -26,6 +28,10 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    ll_protocol.h
+    ll_protocol.h \
+    mainwindow.h \
+    qcustomplot.h \
+    ui_mainwindow.h
 
-FORMS +=
+FORMS += \
+    mainwindow.ui

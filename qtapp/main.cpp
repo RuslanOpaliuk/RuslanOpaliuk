@@ -1,6 +1,14 @@
 #include <QCoreApplication>
 #include <QtSerialPort>
 #include "ll_protocol.h"
+#include "math.h"
+#include "mainwindow.h"
+
+#define OFFSET_CAPTURES    1000  //quantity of captures for root mean square
+#define SHOW_GRAPH         0     //set to 1 to show graph after impact
+#define NUMBER_OF_CAPTURES 200   //quantity of captures after impact
+#define PREVIOUS_CAPTURES  10    //quantity of captures before impact
+#define THRESHOLD          50.0  //threshold which must be achieved by impact to cause capturing
 
 
 static QQueue<uint8_t> byte_stream;
@@ -56,9 +64,9 @@ void error_cb(ll_protocol_err_t error)
     }
 }
 
-static float convert(uint8_t* const data)
+static double convert(uint8_t* const data)
 {
-    static float tmp[3];
+    static double tmp[3];
     tmp[0] = (int16_t)(((((uint16_t)data[1]) << 8) | data[0])) * 0.004f * 9.80954f;
     tmp[1] = (int16_t)(((((uint16_t)data[3]) << 8) | data[2])) * 0.004f * 9.80954f;
     tmp[2] = (int16_t)(((((uint16_t)data[5]) << 8) | data[4])) * 0.004f * 9.80954f;
@@ -127,14 +135,36 @@ void Deserialize::run()
     start_deserializing();
 }
 
+double _root_mean_square(QVector<double>* vect)
+{
+    double tmp = 0.0;
+    for(int i = 0; i < vect->size(); i++)
+    {
+        tmp += (*(vect))[i] * (*(vect))[i];
+    }
+    return sqrt(tmp / vect->size());
+}
+
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    QApplication a(argc, argv);
 
     UartReceive b;
     b.start();
     Deserialize c;
     c.start();
+
+    QQueue<double> previous1;
+    QQueue<double> previous2;
+    QVector<double> impact1;
+    QVector<double> impact2;
+    QVector<double> impactx;
+
+    bool start_capturing = false;
+    bool offset_ready = false;
+    double offset = 0.0;
+
+    message_t msg;
 
     while(true)
     {
@@ -144,14 +174,90 @@ int main(int argc, char *argv[])
             messages_mutex.unlock();
             continue;
         }
-        message_t msg = messages.dequeue();
-        printf("%.1f\t%.1f\tErr_too_short: % 2lu\tErr_too_long: % 2lu\n",
-               convert(msg.message),
-               convert(msg.message + 6),
-               error_short_msg,
-               error_long_msg);
+
+        msg = messages.dequeue();
         messages_mutex.unlock();
+
+        double tmp1 = convert(msg.message);
+        double tmp2 = convert(msg.message + 6);
+
+        if(impact1.size() == OFFSET_CAPTURES && !start_capturing && !offset_ready)
+        {
+            offset = _root_mean_square(&impact1) - _root_mean_square(&impact2);
+            offset_ready = true;
+            impact1.erase(impact1.begin(), impact1.end());
+            impact2.erase(impact2.begin(), impact2.end());
+            printf("offset: %.2f\n", offset);
+        }
+
+        if(!offset_ready)
+        {
+            impact1.append(abs(tmp1));
+            impact2.append(abs(tmp2));
+            continue;
+        }
+
+        if(!start_capturing)
+        {
+            previous1.push_front(abs(tmp1));
+            previous2.push_front(abs(tmp2) + offset);
+            if(previous1.size() > PREVIOUS_CAPTURES)
+            {
+                previous1.removeLast();
+                previous2.removeLast();
+            }
+        }
+
+        if(!start_capturing && (tmp1 > THRESHOLD || tmp2 > THRESHOLD))
+        {
+            start_capturing = true;
+        }
+
+        if(start_capturing && impact1.size() < NUMBER_OF_CAPTURES)
+        {
+            impact1.append(abs(tmp1));
+            impact2.append(abs(tmp2) + offset);
+        }
+
+        if(start_capturing && impact1.size() == NUMBER_OF_CAPTURES)
+        {
+            start_capturing = false;
+
+            while(!previous1.isEmpty())
+            {
+                impact1.prepend(previous1.dequeue());
+                impact2.prepend(previous2.dequeue());
+            }
+
+            for(int i = 0; i < impact1.size(); i++)
+            {
+                impactx.append(i);
+            }
+
+            printf("%.2f\n", _root_mean_square(&impact1) - _root_mean_square(&impact2));
+
+            if(SHOW_GRAPH)
+            {
+                break;
+            }
+            else
+            {
+                impact1.erase(impact1.begin(), impact1.end());
+                impact2.erase(impact2.begin(), impact2.end());
+                impactx.erase(impactx.begin(), impactx.end());
+                offset_ready = false;
+                //need to wait before oscillations get reduced
+                QThread::sleep(2);
+            }
+        }
     }
+
+    QPalette pal = QPalette();
+    pal.setColor(QPalette::Window, Qt::black);
+    MainWindow mw(0, &impactx, &impact1, &impact2);
+    mw.setAutoFillBackground(true);
+    mw.setPalette(pal);
+    mw.show();
 
     return a.exec();
 }

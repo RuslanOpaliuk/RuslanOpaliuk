@@ -91,7 +91,7 @@ than (MESSAGE_SIZE * 2) + 2.
 #include <stdlib.h>
 
 
-#define MESSAGE_SIZE  16U
+#define MESSAGE_SIZE  12U
 
 #define BEGIN_BYTE  0xAAU
 #define END_BYTE    0xBBU

@@ -1,0 +1,687 @@
+ARM GAS  /tmp/cc5LbUTG.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"stm32f1xx_it.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.NMI_Handler,"ax",%progbits
+  18              		.align	1
+  19              		.global	NMI_Handler
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  24              	NMI_Handler:
+  25              	.LFB65:
+  26              		.file 1 "src/stm32f1xx_it.c"
+   1:src/stm32f1xx_it.c **** #include "main.h"
+   2:src/stm32f1xx_it.c **** #include "stm32f1xx_it.h"
+   3:src/stm32f1xx_it.c **** 
+   4:src/stm32f1xx_it.c **** extern UART_HandleTypeDef huart1;
+   5:src/stm32f1xx_it.c **** 
+   6:src/stm32f1xx_it.c **** 
+   7:src/stm32f1xx_it.c **** void NMI_Handler(void)
+   8:src/stm32f1xx_it.c **** {
+  27              		.loc 1 8 1 view -0
+  28              		.cfi_startproc
+  29              		@ Volatile: function does not return.
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+  33              	.L2:
+   9:src/stm32f1xx_it.c ****     while (1)
+  34              		.loc 1 9 5 discriminator 1 view .LVU1
+  10:src/stm32f1xx_it.c ****     {
+  11:src/stm32f1xx_it.c ****         
+  12:src/stm32f1xx_it.c ****     }
+  35              		.loc 1 12 5 discriminator 1 view .LVU2
+   9:src/stm32f1xx_it.c ****     while (1)
+  36              		.loc 1 9 11 discriminator 1 view .LVU3
+  37 0000 FEE7     		b	.L2
+  38              		.cfi_endproc
+  39              	.LFE65:
+  41              		.section	.text.stupid_delay,"ax",%progbits
+  42              		.align	1
+  43              		.global	stupid_delay
+  44              		.syntax unified
+  45              		.thumb
+  46              		.thumb_func
+ARM GAS  /tmp/cc5LbUTG.s 			page 2
+
+
+  48              	stupid_delay:
+  49              	.LVL0:
+  50              	.LFB66:
+  13:src/stm32f1xx_it.c **** }
+  14:src/stm32f1xx_it.c **** 
+  15:src/stm32f1xx_it.c **** void stupid_delay(size_t delay)
+  16:src/stm32f1xx_it.c **** {
+  51              		.loc 1 16 1 view -0
+  52              		.cfi_startproc
+  53              		@ args = 0, pretend = 0, frame = 8
+  54              		@ frame_needed = 0, uses_anonymous_args = 0
+  55              		@ link register save eliminated.
+  17:src/stm32f1xx_it.c ****     volatile size_t tmp;
+  56              		.loc 1 17 5 view .LVU5
+  18:src/stm32f1xx_it.c ****     for(size_t i = 0; i < delay; i++)
+  57              		.loc 1 18 5 view .LVU6
+  58              	.LBB4:
+  59              		.loc 1 18 9 view .LVU7
+  60              		.loc 1 18 16 is_stmt 0 view .LVU8
+  61 0000 0022     		movs	r2, #0
+  62              	.LVL1:
+  63              		.loc 1 18 23 is_stmt 1 view .LVU9
+  64              		.loc 1 18 5 is_stmt 0 view .LVU10
+  65 0002 8242     		cmp	r2, r0
+  66 0004 08D2     		bcs	.L9
+  67              	.LBE4:
+  16:src/stm32f1xx_it.c ****     volatile size_t tmp;
+  68              		.loc 1 16 1 view .LVU11
+  69 0006 82B0     		sub	sp, sp, #8
+  70              	.LCFI0:
+  71              		.cfi_def_cfa_offset 8
+  72              	.L5:
+  73              	.LBB5:
+  19:src/stm32f1xx_it.c ****     {
+  20:src/stm32f1xx_it.c ****         tmp++;
+  74              		.loc 1 20 9 is_stmt 1 discriminator 3 view .LVU12
+  75              		.loc 1 20 12 is_stmt 0 discriminator 3 view .LVU13
+  76 0008 019B     		ldr	r3, [sp, #4]
+  77 000a 0133     		adds	r3, r3, #1
+  78 000c 0193     		str	r3, [sp, #4]
+  18:src/stm32f1xx_it.c ****     {
+  79              		.loc 1 18 34 is_stmt 1 discriminator 3 view .LVU14
+  18:src/stm32f1xx_it.c ****     {
+  80              		.loc 1 18 35 is_stmt 0 discriminator 3 view .LVU15
+  81 000e 0132     		adds	r2, r2, #1
+  82              	.LVL2:
+  18:src/stm32f1xx_it.c ****     {
+  83              		.loc 1 18 23 is_stmt 1 discriminator 3 view .LVU16
+  18:src/stm32f1xx_it.c ****     {
+  84              		.loc 1 18 5 is_stmt 0 discriminator 3 view .LVU17
+  85 0010 8242     		cmp	r2, r0
+  86 0012 F9D3     		bcc	.L5
+  87              	.LBE5:
+  21:src/stm32f1xx_it.c ****     }
+  22:src/stm32f1xx_it.c **** }
+  88              		.loc 1 22 1 view .LVU18
+  89 0014 02B0     		add	sp, sp, #8
+ARM GAS  /tmp/cc5LbUTG.s 			page 3
+
+
+  90              	.LCFI1:
+  91              		.cfi_def_cfa_offset 0
+  92              		@ sp needed
+  93 0016 7047     		bx	lr
+  94              	.L9:
+  95              		.loc 1 22 1 view .LVU19
+  96 0018 7047     		bx	lr
+  97              		.cfi_endproc
+  98              	.LFE66:
+ 100              		.section	.text.HardFault_Handler,"ax",%progbits
+ 101              		.align	1
+ 102              		.global	HardFault_Handler
+ 103              		.syntax unified
+ 104              		.thumb
+ 105              		.thumb_func
+ 107              	HardFault_Handler:
+ 108              	.LFB67:
+  23:src/stm32f1xx_it.c **** 
+  24:src/stm32f1xx_it.c **** void HardFault_Handler(void)
+  25:src/stm32f1xx_it.c **** {
+ 109              		.loc 1 25 1 is_stmt 1 view -0
+ 110              		.cfi_startproc
+ 111              		@ Volatile: function does not return.
+ 112              		@ args = 0, pretend = 0, frame = 16
+ 113              		@ frame_needed = 0, uses_anonymous_args = 0
+ 114 0000 00B5     		push	{lr}
+ 115              	.LCFI2:
+ 116              		.cfi_def_cfa_offset 4
+ 117              		.cfi_offset 14, -4
+ 118 0002 85B0     		sub	sp, sp, #20
+ 119              	.LCFI3:
+ 120              		.cfi_def_cfa_offset 24
+  26:src/stm32f1xx_it.c ****     __disable_irq();
+ 121              		.loc 1 26 5 view .LVU21
+ 122              	.LBB6:
+ 123              	.LBI6:
+ 124              		.file 2 "drivers/CMSIS/Include/cmsis_gcc.h"
+   1:drivers/CMSIS/Include/cmsis_gcc.h **** /**************************************************************************//**
+   2:drivers/CMSIS/Include/cmsis_gcc.h ****  * @file     cmsis_gcc.h
+   3:drivers/CMSIS/Include/cmsis_gcc.h ****  * @brief    CMSIS compiler GCC header file
+   4:drivers/CMSIS/Include/cmsis_gcc.h ****  * @version  V5.0.4
+   5:drivers/CMSIS/Include/cmsis_gcc.h ****  * @date     09. April 2018
+   6:drivers/CMSIS/Include/cmsis_gcc.h ****  ******************************************************************************/
+   7:drivers/CMSIS/Include/cmsis_gcc.h **** /*
+   8:drivers/CMSIS/Include/cmsis_gcc.h ****  * Copyright (c) 2009-2018 Arm Limited. All rights reserved.
+   9:drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  10:drivers/CMSIS/Include/cmsis_gcc.h ****  * SPDX-License-Identifier: Apache-2.0
+  11:drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  12:drivers/CMSIS/Include/cmsis_gcc.h ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+  13:drivers/CMSIS/Include/cmsis_gcc.h ****  * not use this file except in compliance with the License.
+  14:drivers/CMSIS/Include/cmsis_gcc.h ****  * You may obtain a copy of the License at
+  15:drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  16:drivers/CMSIS/Include/cmsis_gcc.h ****  * www.apache.org/licenses/LICENSE-2.0
+  17:drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  18:drivers/CMSIS/Include/cmsis_gcc.h ****  * Unless required by applicable law or agreed to in writing, software
+  19:drivers/CMSIS/Include/cmsis_gcc.h ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  20:drivers/CMSIS/Include/cmsis_gcc.h ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ARM GAS  /tmp/cc5LbUTG.s 			page 4
+
+
+  21:drivers/CMSIS/Include/cmsis_gcc.h ****  * See the License for the specific language governing permissions and
+  22:drivers/CMSIS/Include/cmsis_gcc.h ****  * limitations under the License.
+  23:drivers/CMSIS/Include/cmsis_gcc.h ****  */
+  24:drivers/CMSIS/Include/cmsis_gcc.h **** 
+  25:drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __CMSIS_GCC_H
+  26:drivers/CMSIS/Include/cmsis_gcc.h **** #define __CMSIS_GCC_H
+  27:drivers/CMSIS/Include/cmsis_gcc.h **** 
+  28:drivers/CMSIS/Include/cmsis_gcc.h **** /* ignore some GCC warnings */
+  29:drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic push
+  30:drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wsign-conversion"
+  31:drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wconversion"
+  32:drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wunused-parameter"
+  33:drivers/CMSIS/Include/cmsis_gcc.h **** 
+  34:drivers/CMSIS/Include/cmsis_gcc.h **** /* Fallback for __has_builtin */
+  35:drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __has_builtin
+  36:drivers/CMSIS/Include/cmsis_gcc.h ****   #define __has_builtin(x) (0)
+  37:drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  38:drivers/CMSIS/Include/cmsis_gcc.h **** 
+  39:drivers/CMSIS/Include/cmsis_gcc.h **** /* CMSIS compiler specific defines */
+  40:drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __ASM
+  41:drivers/CMSIS/Include/cmsis_gcc.h ****   #define __ASM                                  __asm
+  42:drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  43:drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __INLINE
+  44:drivers/CMSIS/Include/cmsis_gcc.h ****   #define __INLINE                               inline
+  45:drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  46:drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __STATIC_INLINE
+  47:drivers/CMSIS/Include/cmsis_gcc.h ****   #define __STATIC_INLINE                        static inline
+  48:drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  49:drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __STATIC_FORCEINLINE                 
+  50:drivers/CMSIS/Include/cmsis_gcc.h ****   #define __STATIC_FORCEINLINE                   __attribute__((always_inline)) static inline
+  51:drivers/CMSIS/Include/cmsis_gcc.h **** #endif                                           
+  52:drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __NO_RETURN
+  53:drivers/CMSIS/Include/cmsis_gcc.h ****   #define __NO_RETURN                            __attribute__((__noreturn__))
+  54:drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  55:drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __USED
+  56:drivers/CMSIS/Include/cmsis_gcc.h ****   #define __USED                                 __attribute__((used))
+  57:drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  58:drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __WEAK
+  59:drivers/CMSIS/Include/cmsis_gcc.h ****   #define __WEAK                                 __attribute__((weak))
+  60:drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  61:drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED
+  62:drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED                               __attribute__((packed, aligned(1)))
+  63:drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  64:drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_STRUCT
+  65:drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_STRUCT                        struct __attribute__((packed, aligned(1)))
+  66:drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  67:drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_UNION
+  68:drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_UNION                         union __attribute__((packed, aligned(1)))
+  69:drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  70:drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32        /* deprecated */
+  71:drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  72:drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  73:drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  74:drivers/CMSIS/Include/cmsis_gcc.h ****   struct __attribute__((packed)) T_UINT32 { uint32_t v; };
+  75:drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  76:drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32(x)                  (((struct T_UINT32 *)(x))->v)
+  77:drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ARM GAS  /tmp/cc5LbUTG.s 			page 5
+
+
+  78:drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_WRITE
+  79:drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  80:drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  81:drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  82:drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_WRITE { uint16_t v; };
+  83:drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  84:drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT16_WRITE(addr, val)    (void)((((struct T_UINT16_WRITE *)(void *)(addr))-
+  85:drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  86:drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_READ
+  87:drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  88:drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  89:drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  90:drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_READ { uint16_t v; };
+  91:drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  92:drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT16_READ(addr)          (((const struct T_UINT16_READ *)(const void *)(add
+  93:drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  94:drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_WRITE
+  95:drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  96:drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  97:drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  98:drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_WRITE { uint32_t v; };
+  99:drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 100:drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32_WRITE(addr, val)    (void)((((struct T_UINT32_WRITE *)(void *)(addr))-
+ 101:drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 102:drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_READ
+ 103:drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+ 104:drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+ 105:drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+ 106:drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_READ { uint32_t v; };
+ 107:drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 108:drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32_READ(addr)          (((const struct T_UINT32_READ *)(const void *)(add
+ 109:drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 110:drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __ALIGNED
+ 111:drivers/CMSIS/Include/cmsis_gcc.h ****   #define __ALIGNED(x)                           __attribute__((aligned(x)))
+ 112:drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 113:drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __RESTRICT
+ 114:drivers/CMSIS/Include/cmsis_gcc.h ****   #define __RESTRICT                             __restrict
+ 115:drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 116:drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 117:drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 118:drivers/CMSIS/Include/cmsis_gcc.h **** /* ###########################  Core Function Access  ########################### */
+ 119:drivers/CMSIS/Include/cmsis_gcc.h **** /** \ingroup  CMSIS_Core_FunctionInterface
+ 120:drivers/CMSIS/Include/cmsis_gcc.h ****     \defgroup CMSIS_Core_RegAccFunctions CMSIS Core Register Access Functions
+ 121:drivers/CMSIS/Include/cmsis_gcc.h ****   @{
+ 122:drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 123:drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 124:drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 125:drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Enable IRQ Interrupts
+ 126:drivers/CMSIS/Include/cmsis_gcc.h ****   \details Enables IRQ interrupts by clearing the I-bit in the CPSR.
+ 127:drivers/CMSIS/Include/cmsis_gcc.h ****            Can only be executed in Privileged modes.
+ 128:drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 129:drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __enable_irq(void)
+ 130:drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 131:drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("cpsie i" : : : "memory");
+ 132:drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 133:drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 134:drivers/CMSIS/Include/cmsis_gcc.h **** 
+ARM GAS  /tmp/cc5LbUTG.s 			page 6
+
+
+ 135:drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 136:drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Disable IRQ Interrupts
+ 137:drivers/CMSIS/Include/cmsis_gcc.h ****   \details Disables IRQ interrupts by setting the I-bit in the CPSR.
+ 138:drivers/CMSIS/Include/cmsis_gcc.h ****            Can only be executed in Privileged modes.
+ 139:drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 140:drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __disable_irq(void)
+ 125              		.loc 2 140 27 view .LVU22
+ 126              	.LBB7:
+ 141:drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 142:drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("cpsid i" : : : "memory");
+ 127              		.loc 2 142 3 view .LVU23
+ 128              		.syntax unified
+ 129              	@ 142 "drivers/CMSIS/Include/cmsis_gcc.h" 1
+ 130 0004 72B6     		cpsid i
+ 131              	@ 0 "" 2
+ 132              		.thumb
+ 133              		.syntax unified
+ 134              	.LBE7:
+ 135              	.LBE6:
+  27:src/stm32f1xx_it.c ****     GPIO_InitTypeDef GPIO_InitStruct = {0};
+ 136              		.loc 1 27 5 view .LVU24
+ 137              		.loc 1 27 22 is_stmt 0 view .LVU25
+ 138 0006 0024     		movs	r4, #0
+ 139 0008 0094     		str	r4, [sp]
+ 140 000a 0194     		str	r4, [sp, #4]
+ 141 000c 0294     		str	r4, [sp, #8]
+ 142 000e 0394     		str	r4, [sp, #12]
+  28:src/stm32f1xx_it.c ****     HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, 0);
+ 143              		.loc 1 28 5 is_stmt 1 view .LVU26
+ 144 0010 134D     		ldr	r5, .L13
+ 145 0012 2246     		mov	r2, r4
+ 146 0014 4FF48041 		mov	r1, #16384
+ 147 0018 2846     		mov	r0, r5
+ 148 001a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 149              	.LVL3:
+  29:src/stm32f1xx_it.c ****     GPIO_InitStruct.Pin = GPIO_PIN_14;
+ 150              		.loc 1 29 5 view .LVU27
+ 151              		.loc 1 29 25 is_stmt 0 view .LVU28
+ 152 001e 4FF48043 		mov	r3, #16384
+ 153 0022 0093     		str	r3, [sp]
+  30:src/stm32f1xx_it.c ****     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+ 154              		.loc 1 30 5 is_stmt 1 view .LVU29
+ 155              		.loc 1 30 26 is_stmt 0 view .LVU30
+ 156 0024 0123     		movs	r3, #1
+ 157 0026 0193     		str	r3, [sp, #4]
+  31:src/stm32f1xx_it.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 158              		.loc 1 31 5 is_stmt 1 view .LVU31
+ 159              		.loc 1 31 26 is_stmt 0 view .LVU32
+ 160 0028 0294     		str	r4, [sp, #8]
+  32:src/stm32f1xx_it.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+ 161              		.loc 1 32 5 is_stmt 1 view .LVU33
+ 162              		.loc 1 32 27 is_stmt 0 view .LVU34
+ 163 002a 0223     		movs	r3, #2
+ 164 002c 0393     		str	r3, [sp, #12]
+  33:src/stm32f1xx_it.c ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 165              		.loc 1 33 5 is_stmt 1 view .LVU35
+ 166 002e 6946     		mov	r1, sp
+ARM GAS  /tmp/cc5LbUTG.s 			page 7
+
+
+ 167 0030 2846     		mov	r0, r5
+ 168 0032 FFF7FEFF 		bl	HAL_GPIO_Init
+ 169              	.LVL4:
+ 170              	.L11:
+  34:src/stm32f1xx_it.c ****     
+  35:src/stm32f1xx_it.c ****     while(1)
+ 171              		.loc 1 35 5 discriminator 1 view .LVU36
+  36:src/stm32f1xx_it.c ****     {
+  37:src/stm32f1xx_it.c ****         HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, 1);
+ 172              		.loc 1 37 9 discriminator 1 view .LVU37
+ 173 0036 0A4D     		ldr	r5, .L13
+ 174 0038 0122     		movs	r2, #1
+ 175 003a 4FF48041 		mov	r1, #16384
+ 176 003e 2846     		mov	r0, r5
+ 177 0040 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 178              	.LVL5:
+  38:src/stm32f1xx_it.c ****         stupid_delay(600000);
+ 179              		.loc 1 38 9 discriminator 1 view .LVU38
+ 180 0044 074C     		ldr	r4, .L13+4
+ 181 0046 2046     		mov	r0, r4
+ 182 0048 FFF7FEFF 		bl	stupid_delay
+ 183              	.LVL6:
+  39:src/stm32f1xx_it.c ****         HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, 0);
+ 184              		.loc 1 39 9 discriminator 1 view .LVU39
+ 185 004c 0022     		movs	r2, #0
+ 186 004e 4FF48041 		mov	r1, #16384
+ 187 0052 2846     		mov	r0, r5
+ 188 0054 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 189              	.LVL7:
+  40:src/stm32f1xx_it.c ****         stupid_delay(600000);
+ 190              		.loc 1 40 9 discriminator 1 view .LVU40
+ 191 0058 2046     		mov	r0, r4
+ 192 005a FFF7FEFF 		bl	stupid_delay
+ 193              	.LVL8:
+  35:src/stm32f1xx_it.c ****     {
+ 194              		.loc 1 35 10 discriminator 1 view .LVU41
+ 195 005e EAE7     		b	.L11
+ 196              	.L14:
+ 197              		.align	2
+ 198              	.L13:
+ 199 0060 00100140 		.word	1073811456
+ 200 0064 C0270900 		.word	600000
+ 201              		.cfi_endproc
+ 202              	.LFE67:
+ 204              		.section	.text.MemManage_Handler,"ax",%progbits
+ 205              		.align	1
+ 206              		.global	MemManage_Handler
+ 207              		.syntax unified
+ 208              		.thumb
+ 209              		.thumb_func
+ 211              	MemManage_Handler:
+ 212              	.LFB68:
+  41:src/stm32f1xx_it.c ****     }
+  42:src/stm32f1xx_it.c **** }
+  43:src/stm32f1xx_it.c **** 
+  44:src/stm32f1xx_it.c **** void MemManage_Handler(void)
+  45:src/stm32f1xx_it.c **** {
+ARM GAS  /tmp/cc5LbUTG.s 			page 8
+
+
+ 213              		.loc 1 45 1 view -0
+ 214              		.cfi_startproc
+ 215              		@ Volatile: function does not return.
+ 216              		@ args = 0, pretend = 0, frame = 0
+ 217              		@ frame_needed = 0, uses_anonymous_args = 0
+ 218              		@ link register save eliminated.
+ 219              	.L16:
+  46:src/stm32f1xx_it.c ****     while (1)
+ 220              		.loc 1 46 5 discriminator 1 view .LVU43
+  47:src/stm32f1xx_it.c ****     {
+  48:src/stm32f1xx_it.c **** 
+  49:src/stm32f1xx_it.c ****     }
+ 221              		.loc 1 49 5 discriminator 1 view .LVU44
+  46:src/stm32f1xx_it.c ****     while (1)
+ 222              		.loc 1 46 11 discriminator 1 view .LVU45
+ 223 0000 FEE7     		b	.L16
+ 224              		.cfi_endproc
+ 225              	.LFE68:
+ 227              		.section	.text.BusFault_Handler,"ax",%progbits
+ 228              		.align	1
+ 229              		.global	BusFault_Handler
+ 230              		.syntax unified
+ 231              		.thumb
+ 232              		.thumb_func
+ 234              	BusFault_Handler:
+ 235              	.LFB69:
+  50:src/stm32f1xx_it.c **** }
+  51:src/stm32f1xx_it.c **** 
+  52:src/stm32f1xx_it.c **** void BusFault_Handler(void)
+  53:src/stm32f1xx_it.c **** {
+ 236              		.loc 1 53 1 view -0
+ 237              		.cfi_startproc
+ 238              		@ Volatile: function does not return.
+ 239              		@ args = 0, pretend = 0, frame = 0
+ 240              		@ frame_needed = 0, uses_anonymous_args = 0
+ 241              		@ link register save eliminated.
+ 242              	.L18:
+  54:src/stm32f1xx_it.c ****     while (1)
+ 243              		.loc 1 54 5 discriminator 1 view .LVU47
+  55:src/stm32f1xx_it.c ****     {
+  56:src/stm32f1xx_it.c **** 
+  57:src/stm32f1xx_it.c ****     }
+ 244              		.loc 1 57 5 discriminator 1 view .LVU48
+  54:src/stm32f1xx_it.c ****     while (1)
+ 245              		.loc 1 54 11 discriminator 1 view .LVU49
+ 246 0000 FEE7     		b	.L18
+ 247              		.cfi_endproc
+ 248              	.LFE69:
+ 250              		.section	.text.UsageFault_Handler,"ax",%progbits
+ 251              		.align	1
+ 252              		.global	UsageFault_Handler
+ 253              		.syntax unified
+ 254              		.thumb
+ 255              		.thumb_func
+ 257              	UsageFault_Handler:
+ 258              	.LFB70:
+  58:src/stm32f1xx_it.c **** }
+ARM GAS  /tmp/cc5LbUTG.s 			page 9
+
+
+  59:src/stm32f1xx_it.c **** 
+  60:src/stm32f1xx_it.c **** void UsageFault_Handler(void)
+  61:src/stm32f1xx_it.c **** {
+ 259              		.loc 1 61 1 view -0
+ 260              		.cfi_startproc
+ 261              		@ Volatile: function does not return.
+ 262              		@ args = 0, pretend = 0, frame = 0
+ 263              		@ frame_needed = 0, uses_anonymous_args = 0
+ 264              		@ link register save eliminated.
+ 265              	.L20:
+  62:src/stm32f1xx_it.c ****     while (1)
+ 266              		.loc 1 62 5 discriminator 1 view .LVU51
+  63:src/stm32f1xx_it.c ****     {
+  64:src/stm32f1xx_it.c **** 
+  65:src/stm32f1xx_it.c ****     }
+ 267              		.loc 1 65 5 discriminator 1 view .LVU52
+  62:src/stm32f1xx_it.c ****     while (1)
+ 268              		.loc 1 62 11 discriminator 1 view .LVU53
+ 269 0000 FEE7     		b	.L20
+ 270              		.cfi_endproc
+ 271              	.LFE70:
+ 273              		.section	.text.SVC_Handler,"ax",%progbits
+ 274              		.align	1
+ 275              		.global	SVC_Handler
+ 276              		.syntax unified
+ 277              		.thumb
+ 278              		.thumb_func
+ 280              	SVC_Handler:
+ 281              	.LFB71:
+  66:src/stm32f1xx_it.c **** }
+  67:src/stm32f1xx_it.c **** 
+  68:src/stm32f1xx_it.c **** void SVC_Handler(void)
+  69:src/stm32f1xx_it.c **** {
+ 282              		.loc 1 69 1 view -0
+ 283              		.cfi_startproc
+ 284              		@ args = 0, pretend = 0, frame = 0
+ 285              		@ frame_needed = 0, uses_anonymous_args = 0
+ 286              		@ link register save eliminated.
+  70:src/stm32f1xx_it.c **** 
+  71:src/stm32f1xx_it.c **** }
+ 287              		.loc 1 71 1 view .LVU55
+ 288 0000 7047     		bx	lr
+ 289              		.cfi_endproc
+ 290              	.LFE71:
+ 292              		.section	.text.DebugMon_Handler,"ax",%progbits
+ 293              		.align	1
+ 294              		.global	DebugMon_Handler
+ 295              		.syntax unified
+ 296              		.thumb
+ 297              		.thumb_func
+ 299              	DebugMon_Handler:
+ 300              	.LFB72:
+  72:src/stm32f1xx_it.c **** 
+  73:src/stm32f1xx_it.c **** void DebugMon_Handler(void)
+  74:src/stm32f1xx_it.c **** {
+ 301              		.loc 1 74 1 view -0
+ 302              		.cfi_startproc
+ARM GAS  /tmp/cc5LbUTG.s 			page 10
+
+
+ 303              		@ args = 0, pretend = 0, frame = 0
+ 304              		@ frame_needed = 0, uses_anonymous_args = 0
+ 305              		@ link register save eliminated.
+  75:src/stm32f1xx_it.c **** 
+  76:src/stm32f1xx_it.c **** }
+ 306              		.loc 1 76 1 view .LVU57
+ 307 0000 7047     		bx	lr
+ 308              		.cfi_endproc
+ 309              	.LFE72:
+ 311              		.section	.text.PendSV_Handler,"ax",%progbits
+ 312              		.align	1
+ 313              		.global	PendSV_Handler
+ 314              		.syntax unified
+ 315              		.thumb
+ 316              		.thumb_func
+ 318              	PendSV_Handler:
+ 319              	.LFB73:
+  77:src/stm32f1xx_it.c **** 
+  78:src/stm32f1xx_it.c **** void PendSV_Handler(void)
+  79:src/stm32f1xx_it.c **** {
+ 320              		.loc 1 79 1 view -0
+ 321              		.cfi_startproc
+ 322              		@ args = 0, pretend = 0, frame = 0
+ 323              		@ frame_needed = 0, uses_anonymous_args = 0
+ 324              		@ link register save eliminated.
+  80:src/stm32f1xx_it.c **** 
+  81:src/stm32f1xx_it.c **** }
+ 325              		.loc 1 81 1 view .LVU59
+ 326 0000 7047     		bx	lr
+ 327              		.cfi_endproc
+ 328              	.LFE73:
+ 330              		.section	.text.SysTick_Handler,"ax",%progbits
+ 331              		.align	1
+ 332              		.global	SysTick_Handler
+ 333              		.syntax unified
+ 334              		.thumb
+ 335              		.thumb_func
+ 337              	SysTick_Handler:
+ 338              	.LFB74:
+  82:src/stm32f1xx_it.c **** 
+  83:src/stm32f1xx_it.c **** void SysTick_Handler(void)
+  84:src/stm32f1xx_it.c **** {
+ 339              		.loc 1 84 1 view -0
+ 340              		.cfi_startproc
+ 341              		@ args = 0, pretend = 0, frame = 0
+ 342              		@ frame_needed = 0, uses_anonymous_args = 0
+ 343 0000 08B5     		push	{r3, lr}
+ 344              	.LCFI4:
+ 345              		.cfi_def_cfa_offset 8
+ 346              		.cfi_offset 3, -8
+ 347              		.cfi_offset 14, -4
+  85:src/stm32f1xx_it.c ****     HAL_IncTick();
+ 348              		.loc 1 85 5 view .LVU61
+ 349 0002 FFF7FEFF 		bl	HAL_IncTick
+ 350              	.LVL9:
+  86:src/stm32f1xx_it.c **** }
+ 351              		.loc 1 86 1 is_stmt 0 view .LVU62
+ARM GAS  /tmp/cc5LbUTG.s 			page 11
+
+
+ 352 0006 08BD     		pop	{r3, pc}
+ 353              		.cfi_endproc
+ 354              	.LFE74:
+ 356              		.section	.text.USART1_IRQHandler,"ax",%progbits
+ 357              		.align	1
+ 358              		.global	USART1_IRQHandler
+ 359              		.syntax unified
+ 360              		.thumb
+ 361              		.thumb_func
+ 363              	USART1_IRQHandler:
+ 364              	.LFB75:
+  87:src/stm32f1xx_it.c **** 
+  88:src/stm32f1xx_it.c **** void USART1_IRQHandler(void)
+  89:src/stm32f1xx_it.c **** {
+ 365              		.loc 1 89 1 is_stmt 1 view -0
+ 366              		.cfi_startproc
+ 367              		@ args = 0, pretend = 0, frame = 0
+ 368              		@ frame_needed = 0, uses_anonymous_args = 0
+ 369 0000 08B5     		push	{r3, lr}
+ 370              	.LCFI5:
+ 371              		.cfi_def_cfa_offset 8
+ 372              		.cfi_offset 3, -8
+ 373              		.cfi_offset 14, -4
+  90:src/stm32f1xx_it.c ****     HAL_UART_IRQHandler(&huart1);
+ 374              		.loc 1 90 5 view .LVU64
+ 375 0002 0248     		ldr	r0, .L28
+ 376 0004 FFF7FEFF 		bl	HAL_UART_IRQHandler
+ 377              	.LVL10:
+  91:src/stm32f1xx_it.c **** }
+ 378              		.loc 1 91 1 is_stmt 0 view .LVU65
+ 379 0008 08BD     		pop	{r3, pc}
+ 380              	.L29:
+ 381 000a 00BF     		.align	2
+ 382              	.L28:
+ 383 000c 00000000 		.word	huart1
+ 384              		.cfi_endproc
+ 385              	.LFE75:
+ 387              		.text
+ 388              	.Letext0:
+ 389              		.file 3 "/home/nazar/gcc-arm/arm-none-eabi/include/machine/_default_types.h"
+ 390              		.file 4 "/home/nazar/gcc-arm/arm-none-eabi/include/sys/_stdint.h"
+ 391              		.file 5 "drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
+ 392              		.file 6 "/home/nazar/gcc-arm/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h"
+ 393              		.file 7 "drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 394              		.file 8 "drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h"
+ 395              		.file 9 "drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 396              		.file 10 "drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h"
+ 397              		.file 11 "drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ARM GAS  /tmp/cc5LbUTG.s 			page 12
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 stm32f1xx_it.c
+     /tmp/cc5LbUTG.s:18     .text.NMI_Handler:0000000000000000 $t
+     /tmp/cc5LbUTG.s:24     .text.NMI_Handler:0000000000000000 NMI_Handler
+     /tmp/cc5LbUTG.s:42     .text.stupid_delay:0000000000000000 $t
+     /tmp/cc5LbUTG.s:48     .text.stupid_delay:0000000000000000 stupid_delay
+     /tmp/cc5LbUTG.s:101    .text.HardFault_Handler:0000000000000000 $t
+     /tmp/cc5LbUTG.s:107    .text.HardFault_Handler:0000000000000000 HardFault_Handler
+     /tmp/cc5LbUTG.s:199    .text.HardFault_Handler:0000000000000060 $d
+     /tmp/cc5LbUTG.s:205    .text.MemManage_Handler:0000000000000000 $t
+     /tmp/cc5LbUTG.s:211    .text.MemManage_Handler:0000000000000000 MemManage_Handler
+     /tmp/cc5LbUTG.s:228    .text.BusFault_Handler:0000000000000000 $t
+     /tmp/cc5LbUTG.s:234    .text.BusFault_Handler:0000000000000000 BusFault_Handler
+     /tmp/cc5LbUTG.s:251    .text.UsageFault_Handler:0000000000000000 $t
+     /tmp/cc5LbUTG.s:257    .text.UsageFault_Handler:0000000000000000 UsageFault_Handler
+     /tmp/cc5LbUTG.s:274    .text.SVC_Handler:0000000000000000 $t
+     /tmp/cc5LbUTG.s:280    .text.SVC_Handler:0000000000000000 SVC_Handler
+     /tmp/cc5LbUTG.s:293    .text.DebugMon_Handler:0000000000000000 $t
+     /tmp/cc5LbUTG.s:299    .text.DebugMon_Handler:0000000000000000 DebugMon_Handler
+     /tmp/cc5LbUTG.s:312    .text.PendSV_Handler:0000000000000000 $t
+     /tmp/cc5LbUTG.s:318    .text.PendSV_Handler:0000000000000000 PendSV_Handler
+     /tmp/cc5LbUTG.s:331    .text.SysTick_Handler:0000000000000000 $t
+     /tmp/cc5LbUTG.s:337    .text.SysTick_Handler:0000000000000000 SysTick_Handler
+     /tmp/cc5LbUTG.s:357    .text.USART1_IRQHandler:0000000000000000 $t
+     /tmp/cc5LbUTG.s:363    .text.USART1_IRQHandler:0000000000000000 USART1_IRQHandler
+     /tmp/cc5LbUTG.s:383    .text.USART1_IRQHandler:000000000000000c $d
+
+UNDEFINED SYMBOLS
+HAL_GPIO_WritePin
+HAL_GPIO_Init
+HAL_IncTick
+HAL_UART_IRQHandler
+huart1

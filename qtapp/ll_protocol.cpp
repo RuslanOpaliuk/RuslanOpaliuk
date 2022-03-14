@@ -1,5 +1,4 @@
 #include "ll_protocol.h"
-#include <stdio.h>
 
 
 static uint8_t message[MESSAGE_SIZE];
