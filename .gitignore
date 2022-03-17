@@ -1,0 +1,4 @@
+/qtapp/build/*
+*.user
+build*
+
