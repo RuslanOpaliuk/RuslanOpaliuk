@@ -23,7 +23,6 @@ static QQueue<message_t> messages;
 static QMutex messages_mutex;
 
 
-
 uint8_t get_next_byte_cb()
 {
     uint8_t tmp;
