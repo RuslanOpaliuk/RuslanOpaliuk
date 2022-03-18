@@ -44,8 +44,8 @@ void message_ready_cb(uint8_t* const message)
     messages_mutex.unlock();
 }
 
-size_t error_short_msg = 0;
-size_t error_long_msg = 0;
+size_t error_short_msg  = 0;
+size_t error_long_msg  = 0;
 
 void error_cb(ll_protocol_err_t error)
 {
