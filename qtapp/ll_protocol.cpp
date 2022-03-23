@@ -7,11 +7,10 @@ static uint8_t message[MESSAGE_SIZE];
 void start_deserializing()
 {
     bool message_opened = false;
-    bool early_start = true;
     bool reject = false;
     size_t message_iter = 0;
-    uint8_t byte = 0;
-    uint8_t previous_byte = 0;
+    uint8_t byte = END_BYTE;
+    uint8_t previous_byte = END_BYTE;
 
     while(true)
     {
@@ -58,10 +57,7 @@ void start_deserializing()
                           (byte == REJECT_BYTE
                         && reject))
             {
-                if(reject)
-                {
-                    reject = false;
-                }
+                reject = false;
                 continue;
             }
             else if(     (byte == END_BYTE
@@ -85,22 +81,17 @@ void start_deserializing()
             }
         }
         else if(!message_opened
-                && early_start   == false
                 && byte          == BEGIN_BYTE
                 && previous_byte != REJECT_BYTE)
         {
             message_opened = true;
-        }
-        else if(early_start)
-        {
-            early_start = false;
         }
     }
 }
 
 bool serialize_data(uint8_t* const data_in, uint8_t** data_out, size_t* size_out)
 {
-    if(!data_in || !data_out || !*data_out || !size_out)
+    if(!data_in || !data_out || !size_out)
     {
         return false;
     }
