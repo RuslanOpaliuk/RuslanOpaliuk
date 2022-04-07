@@ -83,11 +83,11 @@ and REJECT_BYTE 0xCC):
    output: AA CC BB CC BB CC BB CC BB CC BB CC BB CC BB CC BB CC BB CC BB CC BB CC BB CC BB CC BB CC BB CC BB BB
    bytes stream 34 bytes, redundancy 18 bytes
 
-   As you can see, the more bytes, which values equal to values of control bytes,
-are in message, the more redundancy it causes. The redundancy can't be more
+   As you can see, the more bytes in message, which values are equal to values
+of control bytes, the more redundancy it causes. The redundancy can't be more
 than MESSAGE_SIZE * 2 + 2 (examples 4.2, 4.3, 4.4).
 
-WARNING. There is one nuance. Imagine that we trying to send two messages:
+WARNING. There is one nuance. Imagine that we trying to send two messages in serial:
 MESSAGE ONE: DD DD DD DD DD DD CC DD DD DD DD DD
 MESSAGE TWO: DD DD DD DD DD DD DD DD DD DD DD DD
 Result bytes stream: AA DD DD DD DD DD DD CC CC DD DD DD DD DD BB AA DD DD DD DD DD DD DD DD DD DD DD DD BB
@@ -100,6 +100,58 @@ AA DD DD DD DD DD DD CC AA DD DD DD DD DD DD DD DD DD DD DD DD BB
 
 Error for too long message will be detected and we will lose second message because
 start byte of second message will be interpreted as byte that must be rejected.
+
+
+Example for code use:
+
+//define callback
+void ll_message_ready_cb(uint8_t* const message)
+{
+    printf("ready: ");
+    for(size_t i = 0; i < MESSAGE_SIZE; i++)
+    {
+        printf("%02X ", message[i]);
+    }
+    printf("\n");
+}
+
+//define callback
+void ll_error_cb(ll_protocol_err_t error)
+{
+    if(error == LL_PROTOCOL_ERR_MESSAGE_TOO_SHORT)
+    {
+        printf("LL_PROTOCOL_ERR_MESSAGE_TOO_SHORT\n");
+    }
+    if(error == LL_PROTOCOL_ERR_MESSAGE_TOO_LONG)
+    {
+        printf("LL_PROTOCOL_ERR_MESSAGE_TOO_LONG\n");
+    }
+}
+
+void transmitter_node()
+{
+    uint8_t data[MESSAGE_SIZE] =
+    {
+        0xCC, 0xCC, 0xDD, 0xDD,
+        0xDD, 0xDD, 0xDD, 0xDD,
+        0xDD, 0xDD, 0xDD, 0xDD,
+        0xDD, 0xDD, 0xDD, 0xDD
+    };
+
+    size_t byte_stream_size = ll_sizeof_serialized(data);
+    uint8_t* byte_stream = (uint8_t*)malloc(byte_stream_size);
+    ll_serialize(data, byte_stream);
+
+    transmit(byte_stream, byte_stream_size);
+}
+
+void receiver_node(uint8_t* byte_stream, size_t byte_stream_size)
+{
+    size_t _remainder;
+    ll_deserialize(byte_stream, byte_stream_size, &_remainder);
+    //or you can implement calling of ll_deserialize in loop
+}
+
 */
 
 #ifndef LL_PROTOCOL_H
@@ -109,11 +161,11 @@ start byte of second message will be interpreted as byte that must be rejected.
 #include <stdlib.h>
 
 
-#define MESSAGE_SIZE  12U
+#define MESSAGE_SIZE   (size_t)12
 
-#define BEGIN_BYTE  0xAAU
-#define END_BYTE    0xBBU
-#define REJECT_BYTE 0xCCU
+#define BEGIN_BYTE    (uint8_t)0xAA
+#define END_BYTE      (uint8_t)0xBB
+#define REJECT_BYTE   (uint8_t)0xCC
 
 typedef enum
 {
@@ -121,35 +173,84 @@ typedef enum
     LL_PROTOCOL_ERR_MESSAGE_TOO_LONG
 } ll_protocol_err_t;
 
-//don't forget to free data_out if that function returned true
-//because there is dynamic allocation inside
-bool serialize_data(
-    uint8_t* const data_in, //array of bytes which must be serialized
-    uint8_t** data_out,     //result array of serializing
-    size_t* size_out        //size of result array
+
+/*
+ * This function is used to know how many bytes you need
+ * to reserve for serialized data.
+ *
+ * Returns quantity of bytes which must be reserved for "data_out"
+ * in "ll_serialize".
+ *
+ * NOTE. "ll_sizeof_serialized" will parse area of memory
+ * with size MESSAGE_SIZE to which parameter "data" points.
+ */
+size_t ll_sizeof_serialized(
+    uint8_t* const data         // data which will be serialized in "ll_serialize"
 );
 
-//this function must work in another thread
-void start_deserializing();
-
-//next functions are used by start_deserializing() and must be defined by you
-
-//this function must return next byte from bytes stream
-//and is called repeatedly by start_deserializing() function
-//you must provide blocking behavior of this function
-uint8_t get_next_byte_cb();
-
-//this function is called by start_deserializing() function
-//every time when message is ready to read
-//as example, you can implement adding this message to some queue
-void message_ready_cb(
-    uint8_t* const message //incoming message to process with size of MESSAGE_SIZE
+/*
+ * This function serializes "data_in" and puts the result to "data_out".
+ *
+ * Returns "true" on success and "false" on fail.
+ *
+ * NOTE. "data_in" size must be equal to MESSAGE_SIZE and "data_out"
+ * size must by equal to size which was returned by ll_sizeof_serialized
+ * for data_in.
+ */
+bool ll_serialize(
+    uint8_t* const data_in,     // data which will be serialized
+    uint8_t* const data_out     // array where result must be put
 );
 
-//this function is called by start_deserializing() function
-//every time when error happens
-void error_cb(
-    ll_protocol_err_t error //error code
+/*
+ * This function parses bytes stream. When message is detected it
+ * calls "ll_message_ready_cb" function. When error in bytes stream
+ * detected it calls "ll_error_cb" function.
+ *
+ * Returns "true" on success and "false" on fail.
+ *
+ * If in bytes stream remain bytes which were not parsed - this
+ * function writes in "start_of_remainder" position in "byte_stream"
+ * where these bytes started. If all bytes from bytes stream were parsed
+ * then "start_of_remainder" must be equal to [byte_stream_size + 1]. If
+ * If none of the bytes in bytes stream were parsed then "start_of_remainder"
+ * equals to zero. NOTE. There can be only two situations with remainder:
+ * 1) none of the bytes were parsed; 2) first bytes was parsed and last remains.
+ * That means that the end of remainder always ends in [byte_stream_size - 1]
+ * position and can't be less than [byte_stream_size - 1].
+ *
+ * Logic of remainder manipulating must be implemented by you. This function
+ * only points to position of start of remainder.
+ */
+bool ll_deserialize(
+    uint8_t* byte_stream,       //byte stream which must be deserialized
+    size_t byte_stream_size,    //byte stream size
+    size_t* start_of_remainder  //position of start of remainder in "byte_stream" after deserializing
+);
+
+/*
+ * This function is called by "ll_deserialize" every time when new message is detected.
+ *
+ * You must define this function by yourself.
+ */
+void ll_message_ready_cb(
+    uint8_t* const message      //incoming message to process with size of MESSAGE_SIZE
+);
+
+/*
+ * This function is called by "ll_deserialize" every time when error in bytes stream
+ * happen. It catches only two errors:
+ * 1) [LL_PROTOCOL_ERR_MESSAGE_TOO_SHORT] - message has started with BEGIN_BYTE but
+ * has ended too early with END_BYTE;
+ * 2) [LL_PROTOCOL_ERR_MESSAGE_TOO_LONG] - message started with BEGIN_BYTE but
+ * hasn't end with END_BYTE after last byte of message came.
+ * Errors such as wrong bytes between messages which not started
+ * with BEGIN_BYTE will not be catched.
+ *
+ * You must define this function by yourself.
+ */
+void ll_error_cb(
+    ll_protocol_err_t error     //error code
 );
 
 #endif // LL_PROTOCOL_H

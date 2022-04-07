@@ -4,126 +4,32 @@
 static uint8_t message[MESSAGE_SIZE];
 
 
-void start_deserializing()
+size_t ll_sizeof_serialized(uint8_t* const data)
 {
-    bool message_opened = false;
-    bool reject = false;
-    bool ignore_previous = false;
-    size_t message_iter = 0;
-    uint8_t byte = END_BYTE;
-    uint8_t previous_byte = END_BYTE;
-
-    while(true)
-    {
-        previous_byte = byte;
-        byte = get_next_byte_cb();
-
-        if(  !message_opened
-           && byte == BEGIN_BYTE
-           && previous_byte != REJECT_BYTE)
-        {
-            message_opened = true;
-        }
-
-        if(!message_opened)
-        {
-            continue;
-        }
-
-        if(message_iter == MESSAGE_SIZE)
-        {
-            message_opened = false;
-            if(byte == END_BYTE)
-            {
-                message_ready_cb(message);
-            }
-            else
-            {
-                error_cb(LL_PROTOCOL_ERR_MESSAGE_TOO_LONG);
-            }
-            message_iter = 0;
-            continue;
-        }
-
-        if(   byte == END_BYTE
-           && previous_byte != REJECT_BYTE
-           && !ignore_previous
-           && message_iter < MESSAGE_SIZE)
-        {
-            message_opened = false;
-            reject = false;
-            message_iter = 0;
-            error_cb(LL_PROTOCOL_ERR_MESSAGE_TOO_SHORT);
-        }
-
-        //it seems that it can be optimized
-        //by combining "if()" at lines 61 and 76
-        if(   (byte != REJECT_BYTE
-           && byte != BEGIN_BYTE
-           && byte != END_BYTE
-           && previous_byte != REJECT_BYTE)
-           ||
-             (byte != REJECT_BYTE
-           && byte != BEGIN_BYTE
-           && byte != END_BYTE
-           && ignore_previous))
-        {
-            message[message_iter++] = byte;
-            ignore_previous = false;
-            continue;
-         }
-
-        if(reject)
-        {
-            message[message_iter++] = byte;
-            if(byte == REJECT_BYTE)
-            {
-                ignore_previous = true;
-            }
-            reject = false;
-            continue;
-        }
-
-        if(byte == REJECT_BYTE && (previous_byte != REJECT_BYTE || ignore_previous))
-        {
-            reject = true;
-            if(ignore_previous)
-            {
-                ignore_previous = false;
-            }
-        }
-    }
-}
-
-bool serialize_data(uint8_t* const data_in, uint8_t** data_out, size_t* size_out)
-{
-    if(!data_in || !data_out || !size_out)
-    {
-        return false;
-    }
-
-    //+2 is for start byte at the beginning and stop byte at the end of message
-    *size_out = MESSAGE_SIZE + 2;
-
+    //+2 is for BEGIN_BYTE at the beginning and END_BYTE at the end of message
+    size_t result = MESSAGE_SIZE + 2;
     for(size_t i = 0; i < MESSAGE_SIZE; i++)
     {
-        if(   data_in[i] == BEGIN_BYTE
-           || data_in[i] == END_BYTE
-           || data_in[i] == REJECT_BYTE)
+        if(   data[i] == BEGIN_BYTE
+           || data[i] == END_BYTE
+           || data[i] == REJECT_BYTE)
         {
-            (*size_out)++;
+            result++;
         }
     }
+    return result;
+}
 
-    *data_out = (uint8_t*)malloc(*size_out);
-    if(!(*data_out))
+bool ll_serialize(uint8_t* const data_in, uint8_t* const data_out)
+{
+    if(!data_in || !data_out)
     {
         return false;
     }
 
-    uint8_t* tmp_out = *data_out;
+    uint8_t* tmp_out = data_out;
 
-    *tmp_out = BEGIN_BYTE;
+    *data_out = BEGIN_BYTE;
     tmp_out++;
 
     for(size_t i = 0; i < MESSAGE_SIZE; i++)
@@ -147,3 +53,105 @@ bool serialize_data(uint8_t* const data_in, uint8_t** data_out, size_t* size_out
     return true;
 }
 
+bool ll_deserialize(uint8_t* const byte_stream, size_t byte_stream_size, size_t* const start_of_remainder)
+{
+    if(byte_stream == NULL || start_of_remainder == NULL)
+    {
+        return false;
+    }
+
+    *start_of_remainder = 0;
+    bool message_opened = false;
+    bool reject = false;
+    bool ignore_previous = false;
+    size_t message_iter = 0;
+    uint8_t byte = END_BYTE;
+    uint8_t previous_byte = END_BYTE;
+
+    for(size_t i = 0; i < byte_stream_size; i++)
+    {
+        previous_byte = byte;
+        byte = byte_stream[i];
+
+        if(  !message_opened
+           && byte == BEGIN_BYTE
+           && previous_byte != REJECT_BYTE)
+        {
+            message_opened = true;
+        }
+
+        if(!message_opened)
+        {
+            continue;
+        }
+
+        if(message_iter == MESSAGE_SIZE)
+        {
+            message_opened = false;
+            if(byte == END_BYTE)
+            {
+                ll_message_ready_cb(message);
+                *start_of_remainder = i + 1;
+            }
+            else
+            {
+                ll_error_cb(LL_PROTOCOL_ERR_MESSAGE_TOO_LONG);
+                *start_of_remainder = i;
+            }
+            message_iter = 0;
+            continue;
+        }
+
+        if(   byte == END_BYTE
+           && previous_byte != REJECT_BYTE
+           && !ignore_previous
+           && message_iter < MESSAGE_SIZE)
+        {
+            message_opened = false;
+            reject = false;
+            message_iter = 0;
+            *start_of_remainder = i + 1;
+            ll_error_cb(LL_PROTOCOL_ERR_MESSAGE_TOO_SHORT);
+        }
+
+        //it seems that it can be optimized
+        //by combining this "if()"
+        if(   (byte != REJECT_BYTE
+           && byte != BEGIN_BYTE
+           && byte != END_BYTE
+           && previous_byte != REJECT_BYTE)
+           ||
+             (byte != REJECT_BYTE
+           && byte != BEGIN_BYTE
+           && byte != END_BYTE
+           && ignore_previous))
+        {
+            message[message_iter++] = byte;
+            ignore_previous = false;
+            continue;
+         }
+
+        //with this "if()"
+        if(reject)
+        {
+            message[message_iter++] = byte;
+            if(byte == REJECT_BYTE)
+            {
+                ignore_previous = true;
+            }
+            reject = false;
+            continue;
+        }
+
+        if(byte == REJECT_BYTE && (previous_byte != REJECT_BYTE || ignore_previous))
+        {
+            reject = true;
+            if(ignore_previous)
+            {
+                ignore_previous = false;
+            }
+        }
+    }
+
+    return true;
+}

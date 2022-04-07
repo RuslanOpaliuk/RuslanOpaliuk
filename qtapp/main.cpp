@@ -23,25 +23,7 @@ static QQueue<message_t> messages;
 static QMutex messages_mutex;
 
 
-uint8_t get_next_byte_cb()
-{
-    uint8_t tmp;
-    while(true)
-    {
-        byte_stream_mutex.lock();
-        if(byte_stream.empty())
-        {
-            byte_stream_mutex.unlock();
-            continue;
-        }
-        tmp = byte_stream.dequeue();
-        byte_stream_mutex.unlock();
-        break;
-    }
-    return tmp;
-}
-
-void message_ready_cb(uint8_t* const message)
+void ll_message_ready_cb(uint8_t* const message)
 {
     message_t msg;
     memcpy(msg.message, message, MESSAGE_SIZE);
@@ -52,7 +34,7 @@ void message_ready_cb(uint8_t* const message)
 
 size_t error_short_msg = 0;
 size_t error_long_msg = 0;
-void error_cb(ll_protocol_err_t error)
+void ll_error_cb(ll_protocol_err_t error)
 {
     if(error == LL_PROTOCOL_ERR_MESSAGE_TOO_SHORT)
     {
@@ -123,7 +105,7 @@ void UartReceive::run()
         byte_stream_mutex.lock();
         for(int i = 0; i < arr.size(); i++)
         {
-            byte_stream.enqueue(arr[i]);
+            byte_stream.enqueue((uint8_t)arr[i]);
         }
         byte_stream_mutex.unlock();
     }
@@ -131,8 +113,30 @@ void UartReceive::run()
 
 void Deserialize::run()
 {
-    printf("deserializing started\n");
-    start_deserializing();
+    QByteArray data;
+    size_t remainder = SIZE_MAX;
+
+    while(true)
+    {
+        if(remainder < (size_t)data.size())
+        {
+            data.remove(0, remainder);
+        }
+        else
+        {
+            data.clear();
+        }
+
+        byte_stream_mutex.lock();
+        while(!byte_stream.isEmpty())
+        {
+            uint8_t tmp = byte_stream.dequeue();
+            data.push_back(tmp);
+        }
+        byte_stream_mutex.unlock();
+
+        ll_deserialize((uint8_t*)data.data(), data.size(), &remainder);
+    }
 }
 
 double _root_mean_square(QVector<double>* vect)
