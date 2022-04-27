@@ -1,4 +1,5 @@
-/qtapp/build/*
+/qtapp/build/
+/stm32/build/
 *.user
-build*
+.vscode
 
