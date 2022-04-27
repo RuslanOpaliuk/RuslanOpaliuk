@@ -5,6 +5,7 @@ BUILD_DIR = build
 
 C_SOURCES =  \
 src/main.c \
+../ll_protocol/ll_protocol.c \
 src/stm32f1xx_it.c \
 src/stm32f1xx_hal_msp.c \
 src/system_stm32f1xx.c \
@@ -59,7 +60,8 @@ C_INCLUDES =  \
 -Idrivers/STM32F1xx_HAL_Driver/Inc \
 -Idrivers/STM32F1xx_HAL_Driver/Inc/Legacy \
 -Idrivers/CMSIS/Device/ST/STM32F1xx/Include \
--Idrivers/CMSIS/Include
+-Idrivers/CMSIS/Include \
+-I../ll_protocol
 
 
 # compile gcc flags
