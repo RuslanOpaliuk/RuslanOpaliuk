@@ -1,7 +1,7 @@
 #include "main.h"
 #include "stm32f1xx_it.h"
 
-extern UART_HandleTypeDef huart1;
+extern UART_HandleTypeDef uart1;
 
 
 void NMI_Handler(void)
@@ -15,7 +15,7 @@ void NMI_Handler(void)
 void stupid_delay(size_t delay)
 {
     volatile size_t tmp;
-    for(size_t i = 0; i < delay; i++)
+    for(size_t i = 0; i < delay; ++i)
     {
         tmp++;
     }
@@ -24,13 +24,13 @@ void stupid_delay(size_t delay)
 void HardFault_Handler(void)
 {
     __disable_irq();
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
+    GPIO_InitTypeDef gpio_init_struct = {0};
     HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, 0);
-    GPIO_InitStruct.Pin = GPIO_PIN_14;
-    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+    gpio_init_struct.Pin = GPIO_PIN_14;
+    gpio_init_struct.Mode = GPIO_MODE_OUTPUT_PP;
+    gpio_init_struct.Pull = GPIO_NOPULL;
+    gpio_init_struct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(GPIOC, &gpio_init_struct);
     
     while(1)
     {
@@ -87,5 +87,5 @@ void SysTick_Handler(void)
 
 void USART1_IRQHandler(void)
 {
-    HAL_UART_IRQHandler(&huart1);
+    HAL_UART_IRQHandler(&uart1);
 }

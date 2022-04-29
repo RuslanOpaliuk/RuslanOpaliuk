@@ -1,0 +1,3 @@
+[submodule "ll_protocol"]
+	path = ll_protocol
+	url = git@github.com:NazarLozynskyi/ll_protocol.git
