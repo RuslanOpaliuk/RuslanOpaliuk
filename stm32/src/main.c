@@ -1,6 +1,6 @@
 #include "stm32f1xx_hal.h"
 #include <stdio.h>
-#include <memory.h>
+#include "ll_protocol.h"
 
 UART_HandleTypeDef uart1;
 
@@ -88,6 +88,19 @@ int _write(int fd, char* ptr, int len)
     return len;
 }
 
+ll_message_info_t msg_info =
+{
+    .size = 6,
+    .begin_byte = 0xAA,
+    .reject_byte = 0xCC,
+    .end_byte = 0xBB
+};
+
+uint8_t byte_stream[14];
+
+uint16_t data[1000];
+uint16_t tmp[3];
+
 int main(void)
 {
     HAL_Init();
@@ -95,11 +108,43 @@ int main(void)
     gpio_init();
     uart1_init();
 
+    size_t size;
+
+    for(size_t i = 0; i < 500; ++i)
+    {
+        data[i] = (i + 2000);
+    }
+
+    size_t iter = 500;
+
+    for(size_t i = 500; i < 1000; ++i)
+    {
+        data[i] = (iter + 2000);
+        iter--;
+    }
+
+    // for (size_t i = 0; i < 1000; i++)
+    // {
+    //     if(!(i%30))
+    //     {
+    //         printf("\n");
+    //     }
+    //     printf("% 4u ", data[i]);
+    // }
+    // printf("\n");
+    
+
     while(1)
     {
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, 1);
-        HAL_Delay(100);
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, 0);
-        HAL_Delay(100);
+        for(size_t i = 0; i < 1000; ++i)
+        {
+            HAL_Delay(1);
+            tmp[0] = data[i];
+            tmp[1] = data[i];
+            tmp[2] = data[i];
+            size = ll_sizeof_serialized(msg_info, (uint8_t*)(tmp));
+            ll_serialize(msg_info, (uint8_t*)(tmp), byte_stream);
+            HAL_UART_Transmit(&uart1, byte_stream, size, HAL_MAX_DELAY);
+        }
     }
 }

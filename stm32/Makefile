@@ -8,6 +8,7 @@ src/main.c \
 src/stm32f1xx_it.c \
 src/stm32f1xx_hal_msp.c \
 src/system_stm32f1xx.c \
+../ll_protocol/ll_protocol.c \
 drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c \
 drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_adc.c \
 drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_adc_ex.c \
@@ -61,6 +62,7 @@ C_INCLUDES =  \
 -Idrivers/STM32F1xx_HAL_Driver/Inc/Legacy \
 -Idrivers/CMSIS/Device/ST/STM32F1xx/Include \
 -Idrivers/CMSIS/Include \
+-I../ll_protocol/
 
 
 # compile gcc flags
