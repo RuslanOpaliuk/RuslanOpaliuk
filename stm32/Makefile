@@ -5,7 +5,6 @@ BUILD_DIR = build
 
 C_SOURCES =  \
 src/main.c \
-../ll_protocol/ll_protocol.c \
 src/stm32f1xx_it.c \
 src/stm32f1xx_hal_msp.c \
 src/system_stm32f1xx.c \
@@ -26,6 +25,7 @@ drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c \
 drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c \
 drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c \
 drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c \
+drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c \
 drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.c
 
 ASM_SOURCES =  \
@@ -61,7 +61,6 @@ C_INCLUDES =  \
 -Idrivers/STM32F1xx_HAL_Driver/Inc/Legacy \
 -Idrivers/CMSIS/Device/ST/STM32F1xx/Include \
 -Idrivers/CMSIS/Include \
--I../ll_protocol
 
 
 # compile gcc flags
